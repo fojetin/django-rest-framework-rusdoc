@@ -1,13 +1,11 @@
 ---
 source:
-
-источник:
     - fields.py
 ---
 
 # Serializer fields
 
-> Each field in a Form class is responsible not only for validating data, but also for "cleaning" it &mdash; normalizing it to a consistent format.
+> Каждое поле в классе Form отвечает не только за проверку данных, но и за их "очистку" &mdash; нормализацию до согласованного формата.
 >
 > &mdash; [Django documentation][cite]
 
