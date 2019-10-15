@@ -3,19 +3,17 @@ source:
     - fields.py
 ---
 
-# Serializer fields
+# Поля сериализатора
 
 > Каждое поле в классе Form отвечает не только за проверку данных, но и за их "очистку" &mdash; нормализацию до согласованного формата.
 >
 > &mdash; [Django documentation][cite]
 
-Serializer fields handle converting between primitive values and internal datatypes.  They also deal with validating input values, as well as retrieving and setting the values from their parent objects.
-
-Сериализатор поля обрабатывать преобразование между примитивными значениями и внутренние типы данных. Они также имеют дело с проверки входных значений, а также извлечения и установки значений от их родительских объектов.
+Поля сериализатора обрабатывают преобразование между примитивными значениями и внутренними типами данных.  Они также занимаются проверкой входных значений, а также извлечением и установкой значений из своих родительских объектов.
 
 ---
 
-**Note:** The serializer fields are declared in `fields.py`, but by convention you should import them using `from rest_framework import serializers` and refer to fields as `serializers.<FieldName>`.
+**Примечание:** поля сериализатора объявляются в `fields.py`, но по соглашению вы должны импортировать их используя `from rest_framework import serializers` и ссылаться на поля как `serializers.<FieldName>`.
 
 ---
 
