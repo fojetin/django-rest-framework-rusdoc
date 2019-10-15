@@ -21,7 +21,7 @@
   * [Парсеры](api-navigation/parsers.md)
   * [Рендеры](api-navigation/renders.md)
   * [Cериализаторы](api-navigation/serializers.md)
-  * [Serializer fields](http://www.django-rest-framework.org/api-guide/fields/)
+  * [Поля сериализатора](api-navigation/fields.md)
   * [Serializer relations](http://www.django-rest-framework.org/api-guide/relations/)
   * [Validators](http://www.django-rest-framework.org/api-guide/validators/)
   * [Authentication](http://www.django-rest-framework.org/api-guide/authentication/)
