@@ -17,88 +17,52 @@ source:
 
 ---
 
-## Core arguments
+## Основные аргументы
 
-Each serializer field class constructor takes at least these arguments.  Some Field classes take additional, field-specific arguments, but the following should always be accepted:
-
-Каждый сериализатор поле класса конструктор принимает по крайней мере эти аргументы. Некоторые классы области принимают дополнительные поля-конкретные аргументы, но следующие должны всегда быть приняты:
+Каждый конструктор класса поля сериализатора принимает по крайней мере эти аргументы. Некоторые классы полей принимают дополнительные, специфичные для поля аргументы, но всегда должны приниматься следующие:
 
 ### `read_only`
 
-Read-only fields are included in the API output, but should not be included in the input during create or update operations. Any 'read_only' fields that are incorrectly included in the serializer input will be ignored.
+Поля только для чтения передаются в операцию API вывода, но не должны быть переданы на вход в операции создания или обновления. Любое 'read_only' поле, которое неправильно передано на вход в сериализатор, будет игнорироваться.
 
-Поля только для чтения включаются в выходной API, но не должны быть включены в участие в операциях создания или обновления. Любой 'только для чтения' поля, которые неправильно включена во входной сериализатор будет игнорироваться.
+Установите значение `True`, чтобы убедиться, что это поле используется при сериализации представления, но не используется при создании или обновлении экземпляра во время десериализации.
 
-Set this to `True` to ensure that the field is used when serializing a representation, but is not used when creating or updating an instance during deserialization.
-
-Установите значение "true", чтобы убедиться, что это поле используется при сериализации представления, но не используется при создании или обновлении экземпляра во время десериализации.
-
-Defaults to `False`
-
-По умолчанию значение `false`
+По умолчанию значение `False`
 
 ### `write_only`
 
-Set this to `True` to ensure that the field may be used when updating or creating an instance, but is not included when serializing the representation.
+Установите это значение в `True`, чтобы гарантировать, что поле может использоваться при обновлении или создании экземпляра, но не включается при сериализации представления.
 
-Установите значение "true", чтобы убедиться, что поле может быть использована при обновлении или создании экземпляра, но не включается при сериализации представление.
-
-Defaults to `False`
-
-По умолчанию значение `false`
+По умолчанию значение `False`
 
 ### `required`
 
-Normally an error will be raised if a field is not supplied during deserialization.
+Обычно возникает ошибка, если поле не предоставляется во время десериализации.
+Установите значение false, если это поле не обязательно должно присутствовать во время десериализации
 
-Как правило, сообщение об ошибке будет выводиться, если поле не подается во время десериализации.
-Set to false if this field is not required to be present during deserialization.
+Установка значения `False` также позволяет исключить атрибут объекта или ключ словаря из вывода при сериализации экземпляра. Если ключ отсутствует, он просто не будет включен в выходное представление.
 
-Значение false, если это поле не требуется присутствовать во время десериализации.
-
-Setting this to `False` also allows the object attribute or dictionary key to be omitted from output when serializing the instance. If the key is not present it will simply not be included in the output representation.
-
-Установка этого параметра на "false" позволяет атрибута объекта или ключевого словаря можно исключить из вывода при сериализации экземпляра. Если ключ не существует, он просто не будет включен в выходном представлении.
-
-Defaults to `True`.
-
-По умолчанию значение `true`.
+По умолчанию значение `True`.
 
 ### `default`
 
-If set, this gives the default value that will be used for the field if no input value is supplied. If not set the default behaviour is to not populate the attribute at all.
+Если задано, это дает значение по умолчанию, которое будет использоваться для поля, если входное значение не задано. Если не установлено поведение по умолчанию, чтобы не заполнять атрибут вообще.
 
-Если установлено, это дает значение по умолчанию, которое будет использоваться для поля при отсутствии входного значение не задано. Если не установить поведение по умолчанию, чтобы не заполнить атрибут на всех.
+`default` не применяется во время операции частичного обновления. В частичное обновление случае будет иметь проверяется возвращаемое значение только те поля, которые представлены в входящих данных.
 
-The `default` is not applied during partial update operations. In the partial update case only fields that are provided in the incoming data will have a validated value returned.
+Может быть установлен на функцию или другой вызываемых объектах, в таком случае значение будет вычисляться каждый раз, когда он используется. При вызове она не будет получать никаких аргументов. Если вызываемый объект имеет `set_context` метод, он будет вызываться каждый раз перед тем, как получить значение с экземпляром поля как единственный аргумент. Это работает точно так же, как для [валидаторов](validators.md#using-set_context).
 
-"По умолчанию" не применяется во время операции частичного обновления. В частичное обновление случае будет иметь проверяется возвращаемое значение только те поля, которые представлены в входящих данных.
+При сериализации экземпляра будет использоваться значение по умолчанию, если атрибут объекта или ключ справочника отсутствуют в экземпляре.
 
-May be set to a function or other callable, in which case the value will be evaluated each time it is used. When called, it will receive no arguments. If the callable has a `set_context` method, that will be called each time before getting the value with the field instance as only argument. This works the same way as for [validators](validators.md#using-set_context).
-
-Может быть установлен на функцию или других вызываемых, в таком случае стоимость будет оцениваться каждый раз, когда он используется. При вызове она будет получать никаких аргументов. Если вызываемый есть set_context` метод, который будет вызываться каждый раз перед тем, как получить значение с экземпляром поля как единственный аргумент. Это работает точно так же, как для [валидаторы](валидаторов.МД#использование-set_context).
-
-When serializing the instance, default will be used if the object attribute or dictionary key is not present in the instance.
-
-При сериализации экземпляра, по умолчанию будет использоваться, если объект атрибута или ключ словаря нет в экземпляре.
-
-Note that setting a `default` value implies that the field is not required. Including both the `default` and `required` keyword arguments is invalid and will raise an error.
-
-Обратите внимание, что настройки "по умолчанию" значений означает, что поле не является обязательным. В том числе как `по умолчанию` и `обязательно` аргументы сайта является недопустимым и приведет к ошибке.
+Обратите внимание, что настройки `default` значений означает, что поле не является обязательным. Включение одновременно аргументов `default` и `required` является недопустимым и приведет к ошибке.
 
 ### `allow_null`
 
-Normally an error will be raised if `None` is passed to a serializer field. Set this keyword argument to `True` if `None` should be considered a valid value.
+Как правило, будет выводиться сообщение об ошибке, если `None` передается в поле сериализатора. Задайте этот аргумент ключевого слова `True`, если `None` должно рассматриваться как допустимое значение.
 
-Как правило, сообщение об ошибке будет выводиться, если "нет", передается в поле сериализатор. Задайте этот аргумент ключевого слова `true`, если `нет` должно рассматриваться как допустимое значение.
+Обратите внимание, что без явного указания `default`, если установить `True` для этого аргумента, `default` приймет `null` для вывода сериализации, но не подразумевает по умолчанию для ввода десериализации.
 
-Note that, without an explicit `default`, setting this argument to `True` will imply a `default` value of `null` for serialization output, but does not imply a default for input deserialization.
-
-Обратите внимание, что без явного "по умолчанию" задание этого аргумента "истина" означает "по умолчанию" значение "null" для вывода сериализации, но не подразумевает по умолчанию для ввода десериализации.
-
-Defaults to `False`
-
-По умолчанию значение `false`
+По умолчанию значение `False`
 
 ### `source`
 
@@ -189,7 +153,7 @@ A boolean representation.
 
 When using HTML encoded form input be aware that omitting a value will always be treated as setting a field to `False`, even if it has a `default=True` option specified. This is because HTML checkbox inputs represent the unchecked state by omitting the value, so REST framework treats omission as if it is an empty checkbox input.
 
-При использовании в кодировке HTML формы ввода следует помнить, что опуская значение всегда будет рассматриваться как настройка поля со значением "false", даже если он имеет по умолчанию=параметр верно указаны. Это потому, что чекбокс в HTML-входы представляют неустановленном состоянии, опуская значение, так что отдыхай рамках трактует бездействие, как будто это пустой входной флажок.
+При использовании в кодировке HTML формы ввода следует помнить, что опуская значение всегда будет рассматриваться как настройка поля со значением `False`, даже если он имеет по умолчанию=параметр верно указаны. Это потому, что чекбокс в HTML-входы представляют неустановленном состоянии, опуская значение, так что отдыхай рамках трактует бездействие, как будто это пустой входной флажок.
 
 Note that Django 2.1 removed the `blank` kwarg from `models.BooleanField`.
 
@@ -208,7 +172,7 @@ previous versions of Django, default `BooleanField` instances will be generated
 предыдущие версии Джанго, экземпляров по умолчанию `BooleanField` будет сгенерирован
 with a `required=False` option.  If you want to control this behaviour manually,
 
-с обязательный параметр=значение false. Если вы хотите контролировать это поведение вручную,
+с обязательный параметр=значение False. Если вы хотите контролировать это поведение вручную,
 explicitly declare the `BooleanField` on the serializer class, or use the
 
 явно объявить `BooleanField` на класс сериализатора, или использовать
@@ -255,7 +219,7 @@ Corresponds to `django.db.models.fields.CharField` or `django.db.models.fields.T
 
 The `allow_null` option is also available for string fields, although its usage is discouraged in favor of `allow_blank`. It is valid to set both `allow_blank=True` and `allow_null=True`, but doing so means that there will be two differing types of empty value permissible for string representations, which can lead to data inconsistencies and subtle application bugs.
 
-Опция allow_null также доступны для строковых полей, хотя его использование не приветствуется в пользу `allow_blank`. Он действует, чтобы установить как allow_blank=true` и `allow_null=правда`, но это означает, что будет два различных типов пустое значение допустимо для строковых представлений, что может привести к несогласованности данных и трудноуловимые ошибки приложения.
+Опция allow_null также доступны для строковых полей, хотя его использование не приветствуется в пользу `allow_blank`. Он действует, чтобы установить как `allow_blank=True` и `allow_null=True`, но это означает, что будет два различных типов пустое значение допустимо для строковых представлений, что может привести к несогласованности данных и трудноуловимые ошибки приложения.
 
 ## EmailField
 
@@ -433,7 +397,7 @@ And to validate numbers up to anything less than one billion with a resolution o
 
 This field also takes an optional argument, `coerce_to_string`. If set to `True` the representation will be output as a string. If set to `False` the representation will be left as a `Decimal` instance and the final representation will be determined by the renderer.
 
-Это поле также принимает необязательный аргумент, `coerce_to_string`. Если установлен в `true`, то представление будет выводиться в строку. Если значение "false" представление останется в качестве десятичного экземпляр и конечного представления будет определяться визуализации.
+Это поле также принимает необязательный аргумент, `coerce_to_string`. Если установлен в `true`, то представление будет выводиться в строку. Если значение `False` представление останется в качестве десятичного экземпляр и конечного представления будет определяться визуализации.
 
 If unset, this will default to the same value as the `COERCE_DECIMAL_TO_STRING` setting, which is `True` unless set otherwise.
 
@@ -473,7 +437,7 @@ When a value of `None` is used for the format `datetime` objects will be returne
 
 When using `ModelSerializer` or `HyperlinkedModelSerializer`, note that any model fields with `auto_now=True` or `auto_now_add=True` will use serializer fields that are `read_only=True` by default.
 
-При использовании `ModelSerializer " или " HyperlinkedModelSerializer`, обратите внимание, что любая модель поля с auto_now=true` или `auto_now_add=true`, то будет использовать сериализатор поля `как read_only=true`, то по умолчанию.
+При использовании `ModelSerializer " или " HyperlinkedModelSerializer`, обратите внимание, что любая модель поля с auto_now=True` или `auto_now_add=True`, то будет использовать сериализатор поля как `read_only=True`, то по умолчанию.
 
 If you want to override this behavior, you'll need to declare the `DateTimeField` explicitly on the serializer.  For example:
 
